@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LeftRecursive\Functional.cs" />
+    <Compile Include="LeftRecursive\ObjectOriented.cs" />
     <Compile Include="Pair.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="RecursiveDescent\ObjectOriented.cs" />
