@@ -21,16 +21,16 @@ namespace ParserCombinators.RecursiveDescent.Functional
 
         public Func<string, int, Result<T>> Parse { get; internal set; }
 
-        public Parser<Tuple<T, T1>> Then<T1>(Parser<T1> p1)
+        public Parser<Pair<T, T1>> Then<T1>(Parser<T1> p1)
         {
             var parse = Parse;
-            return new Parser<Tuple<T, T1>>((input, pos) =>
+            return new Parser<Pair<T, T1>>((input, pos) =>
             {
                 var r0 = parse(input, pos);
-                if (r0.Failed) return new Result<Tuple<T, T1>>(pos, r0.Error);
+                if (r0.Failed) return new Result<Pair<T, T1>>(pos, r0.Error);
                 var r1 = p1.Parse(input, r0.Pos);
-                if (r1.Failed) return new Result<Tuple<T, T1>>(pos, r1.Error);
-                return new Result<Tuple<T, T1>>(Tuple.Create(r0.Value, r1.Value), r1.Pos);
+                if (r1.Failed) return new Result<Pair<T, T1>>(pos, r1.Error);
+                return new Result<Pair<T, T1>>(Pair.Create(r0.Value, r1.Value), r1.Pos);
             });
         }
 
@@ -51,9 +51,9 @@ namespace ParserCombinators.RecursiveDescent.Functional
             {
                 try
                 {
-                    var r = parse(input, pos);
-                    return r.Failed ? new Result<T1>(pos, r.Error):
-                                      new Result<T1>(selector(r.Value), r.Pos);
+                    var r0 = parse(input, pos);
+                    return r0.Failed ? new Result<T1>(pos, r0.Error):
+                                       new Result<T1>(selector(r0.Value), r0.Pos);
                 }
                 catch (Exception e)
                 {

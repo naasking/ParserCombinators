@@ -10,7 +10,7 @@ namespace ParserCombinators.RecursiveDescent.ObjectOriented
     {
         public abstract Result<T> Parse(string input, int pos);
 
-        public Parser<Tuple<T, T1>> Then<T1>(Parser<T1> p1)
+        public Parser<Pair<T, T1>> Then<T1>(Parser<T1> p1)
         {
             return new Then<T, T1> { p0 = this, p1 = p1 };
         }
@@ -67,18 +67,18 @@ namespace ParserCombinators.RecursiveDescent.ObjectOriented
         }
     }
 
-    sealed class Then<T0, T1> : Parser<Tuple<T0, T1>>
+    sealed class Then<T0, T1> : Parser<Pair<T0, T1>>
     {
         internal Parser<T0> p0;
         internal Parser<T1> p1;
 
-        public override Result<Tuple<T0, T1>> Parse(string input, int pos)
+        public override Result<Pair<T0, T1>> Parse(string input, int pos)
         {
             var r0 = p0.Parse(input, pos);
             if (r0.Failed) return Fail(pos, r0.Error);
             var r1 = p1.Parse(input, r0.Pos);
             if (r1.Failed) return Fail(pos, r1.Error);
-            return OK(Tuple.Create(r0.Value, r1.Value), r1.Pos);
+            return OK(Pair.Create(r0.Value, r1.Value), r1.Pos);
         }
         public override string ToString()
         {
@@ -110,8 +110,8 @@ namespace ParserCombinators.RecursiveDescent.ObjectOriented
         {
             try
             {
-                var r = parser.Parse(input, pos);
-                return r.Failed ? Fail(pos, r.Error) : OK(selector(r.Value), r.Pos);
+                var r0 = parser.Parse(input, pos);
+                return r0.Failed ? Fail(pos, r0.Error) : OK(selector(r0.Value), r0.Pos);
             }
             catch (Exception e)
             {

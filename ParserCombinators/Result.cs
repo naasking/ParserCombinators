@@ -31,5 +31,9 @@ namespace ParserCombinators
             pos = Pos;
             return Error == null;
         }
+        public override string ToString()
+        {
+            return Error == null ? "OK:" + Value.ToString() : "Fail:" + Error;
+        }
     }
 }
